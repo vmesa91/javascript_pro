@@ -1,9 +1,10 @@
 
 
-document.addEventListener("DOMContentLoaded", function() {
+/* document.addEventListener("DOMContentLoaded", function() {
     alert("Hola");
-  });
+  }); */
 
+console.log( miNuevoNombre + " Jimemez" );
 console.log('Hola Mundo');
 
 let a = 10;
@@ -34,3 +35,8 @@ console.error ( x ) */
 console.table({ a, b, c, d, x })
 
 var miNombre = 'Virginia';
+
+let outerWidth = 100000;
+const outerHeight = 600;
+
+let miNuevoNombre = "Virginia Mesa"
