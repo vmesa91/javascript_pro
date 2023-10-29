@@ -1,3 +1,6 @@
+(() => {
+
+    'use strict'
 
 /* 
     NºC = Carta treboles
@@ -7,35 +10,41 @@
 */
 
 let deck = []; 
-const tipos = [ 'C', 'D', 'H', 'S' ]
-const figuras = [ 'A', 'J', 'Q', 'K' ]
-const marcadores = document.querySelectorAll('small')
-const tableroJugador = document.getElementById('jugador-carta')
-const tableroComputadora = document.getElementById('computadora-carta')
-let puntosJugador = 0;
-let puntosComputadora = 0;
+const tipos = [ 'C', 'D', 'H', 'S' ],
+      figuras = [ 'A', 'J', 'Q', 'K' ];
 
+
+let puntosJugadores = [];
+
+const marcadores = document.querySelectorAll('small'),
+      tableroJugador = document.getElementById('jugador-carta'),
+      tableroComputadora = document.getElementById('computadora-carta');
+
+
+// ! Inicio del juego
+const inicializarJuego = ( numJugadores = 2 ) => {
+    deck = crearDeck();
+}
+    
 // Nueva baraja
 const crearDeck = () => {
 
-     for ( let i=2; i <= 10; i++ ) {
+    deck = [];
+
+    for ( let i=2; i <= 10; i++ ) {
         for ( let tipo of tipos ) {
             deck.push( i + tipo )
         }
-     } 
+    } 
      
-     for ( let tipo of tipos ) {
+    for ( let tipo of tipos ) {
         for ( let figura of figuras ) {
             deck.push( figura + tipo )
         }
-     }
+    }
 
-    deck = _.shuffle(deck) 
-    return deck
-
+    return _.shuffle(deck); 
 }
-
-crearDeck()
 
 // Funcion para pedir Carta
 const pedirCarta = () => {
@@ -43,8 +52,7 @@ const pedirCarta = () => {
     if (deck.length === 0) {
         throw 'No hay cartas en el deck'
     }
-    const carta = deck.pop() 
-    return carta
+    return deck.pop(); 
 }
 
 /* const valorCarta = ( carta ) => {
@@ -71,12 +79,16 @@ const pedirCarta = () => {
 const valorCarta = ( carta ) => {
     
     const valor = carta.substring( 0, carta.length - 1 )
-
     return isNaN( valor ) 
                 ? (valor === 'A' ) ? 11 : 10
                 : valor * 1                   
-
 }
+
+
+const acumularPuntos = (  ) => {
+    puntosJugadores
+}
+
 
 // Turno Computadora
 const turnoComputadora = ( puntosMinimos ) => {
@@ -84,13 +96,16 @@ const turnoComputadora = ( puntosMinimos ) => {
     do {
 
         const carta = pedirCarta()
+
+        puntosComputadora += valorCarta( carta )
+        marcadores[1].innerText = puntosComputadora
+
         const cartaNew = document.createElement('img')
         cartaNew.src = `assets/cartas/${carta}.png`
         cartaNew.classList.add('carta')
         tableroComputadora.append(cartaNew)
 
-        puntosComputadora += valorCarta( carta )
-        marcadores[1].innerText = puntosComputadora
+
 
         if (puntosComputadora > 21) break;
         
@@ -126,6 +141,7 @@ butttonAsk.addEventListener( 'click' , () => {
     tableroJugador.append(cartaNew)
 
     puntosJugador += valorCarta( carta )
+    console.log(puntosJugador)
     marcadores[0].innerText = puntosJugador
 
     if (puntosJugador > 21) {
@@ -150,7 +166,23 @@ buttonStop.addEventListener( 'click' , () => {
 })
 
 buttonNew.addEventListener( 'click', () =>  {
-    crearDeck()
+/*     deck = []
+    crearDeck() */
+
+    inicializarJuego()
+    marcadores[0].innerText = 0
+    marcadores[1].innerText = 0
+
+    tableroJugador.innerHTML = ''
+    tableroComputadora.innerHTML = ''
+    
+
 
 
 })
+
+
+})()
+
+
+
