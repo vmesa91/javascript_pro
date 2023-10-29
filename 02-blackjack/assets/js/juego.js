@@ -1,4 +1,4 @@
-(() => {
+const miModulo = (() => {
 
     'use strict'
 
@@ -17,13 +17,26 @@ const tipos = [ 'C', 'D', 'H', 'S' ],
 let puntosJugadores = [];
 
 const marcadores = document.querySelectorAll('small'),
-      tableroJugador = document.getElementById('jugador-carta'),
-      tableroComputadora = document.getElementById('computadora-carta');
+      tablerosJugadores = document.querySelectorAll('.divCartas');
 
 
 // ! Inicio del juego
 const inicializarJuego = ( numJugadores = 2 ) => {
+
+    console.clear()
+    
     deck = crearDeck();
+
+    puntosJugadores = []; 
+
+    for (let i = 0; i < numJugadores; i ++ ) {
+        puntosJugadores.push(0)   
+        marcadores[i].innerText = 0; 
+        tablerosJugadores[i].innerHTML = '';
+    }
+
+    butttonAsk.disabled = false
+    buttonStop.disabled = false
 }
     
 // Nueva baraja
@@ -85,31 +98,25 @@ const valorCarta = ( carta ) => {
 }
 
 
-const acumularPuntos = (  ) => {
-    puntosJugadores
+const acumularPuntos = ( carta, turno ) => {
+    puntosJugadores[turno] += valorCarta( carta )
+    marcadores[turno].innerText = puntosJugadores[turno];
+    return puntosJugadores[turno];
 }
 
 
-// Turno Computadora
-const turnoComputadora = ( puntosMinimos ) => {
-    
-    do {
+const crearCarta = ( carta, turno ) => {
 
-        const carta = pedirCarta()
+    const cartaNew = document.createElement('img')
+    cartaNew.src = `assets/cartas/${carta}.png`
+    cartaNew.classList.add('carta')
+    tablerosJugadores[turno].append(cartaNew)
 
-        puntosComputadora += valorCarta( carta )
-        marcadores[1].innerText = puntosComputadora
+}
 
-        const cartaNew = document.createElement('img')
-        cartaNew.src = `assets/cartas/${carta}.png`
-        cartaNew.classList.add('carta')
-        tableroComputadora.append(cartaNew)
+const alertaCampeon = () => {
 
-
-
-        if (puntosComputadora > 21) break;
-        
-    } while ( ( puntosComputadora < puntosMinimos ) && ( puntosMinimos <= 21 ) )
+    const [ puntosMinimos, puntosComputadora  ] = puntosJugadores 
 
     setTimeout(() => {
         
@@ -121,9 +128,29 @@ const turnoComputadora = ( puntosMinimos ) => {
             alert('Jugador Gana')    
         }
 
-    }, 10);
+    }, 20);
+
+}
+
+// Turno Computadora
+const turnoComputadora = ( puntosMinimos ) => {
+
+    let puntosComputadora = 0;
+    
+    do {
+
+        const carta = pedirCarta()
+
+        puntosComputadora = acumularPuntos(carta, puntosJugadores.length - 1)
+
+        crearCarta( carta, puntosJugadores.length - 1  )
+
+        if (puntosMinimos > 21) break;
+        
+    } while ( ( puntosComputadora < puntosMinimos ) && ( puntosMinimos = 21 ) )
 
 
+    alertaCampeon()
 }
 
 // Eventos
@@ -134,24 +161,19 @@ const buttonNew = document.querySelector('#btnNuevo')
 butttonAsk.addEventListener( 'click' , () => {
 
     const carta = pedirCarta()
-
-    const cartaNew = document.createElement('img')
-    cartaNew.src = `assets/cartas/${carta}.png`
-    cartaNew.classList.add('carta')
-    tableroJugador.append(cartaNew)
-
-    puntosJugador += valorCarta( carta )
-    console.log(puntosJugador)
-    marcadores[0].innerText = puntosJugador
+    const puntosJugador = acumularPuntos(carta, 0)
+    crearCarta( carta, 0 )
 
     if (puntosJugador > 21) {
         
+        console.warn('Lo siento mucho, perdiste')
         butttonAsk.disabled = true
         buttonStop.disabled = true
         turnoComputadora(puntosJugador)
 
     } else if ( puntosJugador === 21 ) {
         
+        console.warn('21!!!!')
         butttonAsk.disabled = true
         buttonStop.disabled = true
         turnoComputadora(puntosJugador)
@@ -166,21 +188,14 @@ buttonStop.addEventListener( 'click' , () => {
 })
 
 buttonNew.addEventListener( 'click', () =>  {
-/*     deck = []
-    crearDeck() */
 
     inicializarJuego()
-    marcadores[0].innerText = 0
-    marcadores[1].innerText = 0
-
-    tableroJugador.innerHTML = ''
-    tableroComputadora.innerHTML = ''
-    
-
-
 
 })
 
+return {
+    nuevoJuego: inicializarJuego 
+}
 
 })()
 
