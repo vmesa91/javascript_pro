@@ -182,6 +182,7 @@ butttonAsk.addEventListener( 'click' , () => {
 })
 
 buttonStop.addEventListener( 'click' , () => {
+    const puntosJugador = puntosJugadores[0]
     turnoComputadora(puntosJugador)
     butttonAsk.disabled = true
     buttonStop.disabled = true
