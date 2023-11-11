@@ -1,4 +1,3 @@
-
 class Persona  {
 
     // Desde Persona directamente, sin instanciar nada
@@ -18,7 +17,7 @@ class Persona  {
     frase;
     comida;
 
-    constructor( nombre, edad, frase ) {
+    constructor( nombre = 'Sin nombre', edad = 'Sin edad', frase = 'Sin frase') {
 
         if (!nombre) throw Error ('El nombre es obligatorio');
         
@@ -49,23 +48,28 @@ class Persona  {
     miFrase() {
         console.log(` Soy ${ this.nombre } y mi frase dice : ${ this.frase } `)
     }
+
+}
+
+class Heroe extends Persona {
+
+    clan = 'Sin Clan';
+
+    constructor( nombre, edad, frase ) {
+        super( nombre, edad, frase )
+        this.clan = 'Los Avengers'
+    }
+
+    quienSoy() {
+        console.log(` Soy ${ this.nombre } y mi clan es ${ this.clan } `)
+        super.quienSoy()
+    }
+ 
 }
 
 
-const spiderman = new Persona( 'Spiderman', 45, 'Buenas!')
-const batman = new Persona( 'Spiderman', 45, 'Buenas!')
+const spiderman = new Heroe('Spiderman', 34, 'Hola, soy Spiderman')
+
 console.log(spiderman)
 
-spiderman.setComidaFavorita = 'pizza';
-
-spiderman.comida = 'Pizza';
-
-console.log(spiderman.getComidaFavorita)
-
-console.log(spiderman.comida)
-
-console.log('Conteo', Persona._conteo)
-console.log(Persona.conteo)
-Persona.mensaje()
-
-Persona.propiedadExterna = 'Hola mundo';
+spiderman.quienSoy()
